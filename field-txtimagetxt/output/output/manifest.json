@@ -1,0 +1,119 @@
+{
+  "name": {
+    "zh-CN": "图像生成"
+  },
+  "i18nMap": {
+    "zh-CN": {
+      "param_image_label": "图片",
+      "param_prompt_label": "提示词",
+      "param_temperature_label": "Temperature",
+      "param_top_p_label": "topP",
+      "param_top_K_label": "topK",
+      "param_candidateCount_label": "candidateCount"
+    }
+  },
+  "isDebug": true,
+  "fields": [
+    {
+      "fieldType": "text",
+      "uiSchema": {
+        "fieldMetaEditor": {
+          "component": "FieldMetaEditor",
+          "props": {
+            "schema": {
+              "items": [
+                {
+                  "key": "prompt",
+                  "label": "${{param_prompt_label}}",
+                  "component": "Textarea",
+                  "props": {
+                    "placeholder": "请输入图片编辑指令",
+                    "enableFieldReference": true
+                  },
+                  "validator": {
+                    "required": true
+                  }
+                },
+                {
+                  "key": "imageUrl1",
+                  "label": "${{param_image_label}}",
+                  "component": "FieldSelect",
+                  "props": {
+                    "supportTypes": [
+                      "file"
+                    ]
+                  },
+                  "validator": {
+                    "required": false
+                  }
+                },
+                {
+                  "key": "temperature",
+                  "label": "${{param_temperature_label}}",
+                  "component": "Textarea",
+                  "props": {
+                    "placeholder": "请输入0.0-2.0之间数字"
+                  },
+                  "validator": {
+                    "required": false
+                  }
+                },
+                {
+                  "key": "topP",
+                  "label": "${{param_top_p_label}}",
+                  "component": "Textarea",
+                  "props": {
+                    "placeholder": "请输入0.0-1.0之间数字"
+                  },
+                  "validator": {
+                    "required": false
+                  }
+                },
+                {
+                  "key": "topK",
+                  "label": "${{param_top_K_label}}",
+                  "component": "Textarea",
+                  "props": {
+                    "placeholder": "请输入10-100之间数字"
+                  },
+                  "validator": {
+                    "required": false
+                  }
+                },
+                {
+                  "key": "candidateCount",
+                  "label": "${{param_candidateCount_label}}",
+                  "component": "Textarea",
+                  "props": {
+                    "placeholder": "请输入1-8之间数字"
+                  },
+                  "validator": {
+                    "required": false
+                  }
+                }
+              ],
+              "authorizations": {
+                "id": "auth_id",
+                "platform": "毛毛虫",
+                "type": "HeaderBearerToken",
+                "required": false,
+                "instructionsUrl": "https://www.mmcjt.cn/",
+                "label": "授权",
+                "tooltips": "请配置授权",
+                "icon": {
+                  "light": "https://saas.jcbbi.com/upload/2026/01/29/767965034025029.jpg",
+                  "dark": "https://saas.jcbbi.com/upload/2026/01/29/767965034025029.jpg"
+                }
+              }
+            }
+          }
+        }
+      },
+      "presetFieldConfig": {
+        "externalEditorConfig": {},
+        "fieldProperty": {}
+      }
+    }
+  ],
+  "extensionSubType": "faas"
+}

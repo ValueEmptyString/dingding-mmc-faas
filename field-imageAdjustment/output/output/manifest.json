@@ -1,0 +1,111 @@
+{
+  "name": {
+    "zh-CN": "图像调整"
+  },
+  "i18nMap": {
+    "zh-CN": {
+      "param_image_size_label": "图像大小调整",
+      "param_image_label": "图片",
+      "param_image_name_label": "图片名称",
+      "param_image_model": "模式"
+    }
+  },
+  "isDebug": true,
+  "fields": [
+    {
+      "fieldType": "file",
+      "uiSchema": {
+        "fieldMetaEditor": {
+          "component": "FieldMetaEditor",
+          "props": {
+            "schema": {
+              "items": [
+                {
+                  "key": "imageUrl1",
+                  "label": "${{param_image_label}}",
+                  "component": "FieldSelect",
+                  "props": {
+                    "supportTypes": [
+                      "file"
+                    ]
+                  },
+                  "validator": {
+                    "required": true
+                  }
+                },
+                {
+                  "key": "imageSize",
+                  "label": "${{param_image_size_label}}",
+                  "component": "Textarea",
+                  "props": {
+                    "placeholder": "请输入图像大小，格式如：100*100",
+                    "enableFieldReference": true
+                  },
+                  "validator": {
+                    "required": true
+                  }
+                },
+                {
+                  "key": "imageName",
+                  "label": "${{param_image_name_label}}",
+                  "component": "Textarea",
+                  "props": {
+                    "placeholder": "请输入图像名称",
+                    "enableFieldReference": true
+                  },
+                  "validator": {
+                    "required": false
+                  }
+                },
+                {
+                  "key": "imageModel",
+                  "label": "${{param_image_model}}",
+                  "component": "SingleSelect",
+                  "props": {
+                    "defaultValue": "contain",
+                    "placeholder": "请选择",
+                    "options": [
+                      {
+                        "key": "stretch",
+                        "title": "缩放"
+                      },
+                      {
+                        "key": "cover",
+                        "title": "等比例（会裁剪）"
+                      },
+                      {
+                        "key": "contain",
+                        "title": "完全缩放（会填充）"
+                      }
+                    ]
+                  },
+                  "validator": {
+                    "required": false
+                  }
+                }
+              ],
+              "authorizations": {
+                "id": "auth_id",
+                "platform": "毛毛虫",
+                "type": "HeaderBearerToken",
+                "required": false,
+                "instructionsUrl": "https://www.mmcjt.cn/",
+                "label": "授权",
+                "tooltips": "请联系公司AI管理员获取授权（1.0.0）",
+                "icon": {
+                  "light": "https://saas.jcbbi.com/upload/2026/01/29/767965034025029.jpg",
+                  "dark": "https://saas.jcbbi.com/upload/2026/01/29/767965034025029.jpg"
+                }
+              }
+            }
+          }
+        }
+      },
+      "presetFieldConfig": {
+        "externalEditorConfig": {},
+        "fieldProperty": {}
+      }
+    }
+  ],
+  "extensionSubType": "faas"
+}
