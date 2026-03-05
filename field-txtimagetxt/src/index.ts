@@ -130,7 +130,7 @@ fieldDecoratorKit.setDecorator({
       // 1. 调用Gemini API
       const url = 'https://saas.jcbbi.com:8180/api/sysChatChannel/messagebuilderchat';
 
-      // 飞书公共插件
+      // 钉钉公共插件
       const headers = {
         'Content-Type': 'application/json',
       };
