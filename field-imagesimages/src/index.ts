@@ -183,12 +183,11 @@ fieldDecoratorKit.setDecorator({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer 3lbdC51aWu9RUL6gFa3fFaCcA50b47EaB8B893DeCfEc6716'
         },
         body: JSON.stringify(requestBody)
       };
 
-      const res: any = await context.fetch(url, init);
+      const res: any = await context.fetch(url, init,'auth_id');
       const resJson = await res.json();
 
       // 3. 处理响应
@@ -205,6 +204,8 @@ fieldDecoratorKit.setDecorator({
         throw new Error('API call failed with code: ' + resJson.code);
       }
 
+
+      
       // console.log('===========<uploadedImages', uploadedImages);
 
       return {

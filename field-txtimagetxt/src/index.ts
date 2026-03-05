@@ -27,10 +27,10 @@ fieldDecoratorKit.setDecorator({
     'zh-CN': {
         "param_image_label": "图片",
         "param_prompt_label": "提示词",
-        // "param_temperature_label": "Temperature",
-        // "param_top_p_label": "topP",
-        // "param_top_K_label": "topK",
-        // "param_candidateCount_label": "candidateCount",
+        "param_temperature_label": "Temperature",
+        "param_top_p_label": "topP",
+        "param_top_K_label": "topK",
+        "param_candidateCount_label": "candidateCount",
 
     }
   },
@@ -59,50 +59,50 @@ fieldDecoratorKit.setDecorator({
         required: false,
       }
     },
-    // {
-    //   key: 'temperature',
-    //   label: t('param_temperature_label'),
-    //   component: FormItemComponent.Textarea,
-    //   props: {
-    //     placeholder: '请输入0.0-2.0之间数字',
-    //   },
-    //   validator: {
-    //     required: false,
-    //   }
-    // },
-    // {
-    //   key: 'topP',
-    //   label: t('param_top_p_label'),
-    //   component: FormItemComponent.Textarea,
-    //   props: {
-    //     placeholder: '请输入0.0-1.0之间数字',
-    //   },
-    //   validator: {
-    //     required: false,
-    //   }
-    // },
-    // {
-    //   key: 'topK',
-    //   label: t('param_top_K_label'),
-    //   component: FormItemComponent.Textarea,
-    //   props: {
-    //     placeholder: '请输入10-100之间数字',
-    //   },
-    //   validator: {
-    //     required: false,
-    //   }
-    // },
-    // {
-    //   key: 'candidateCount',
-    //   label: t('param_candidateCount_label'),
-    //   component: FormItemComponent.Textarea,
-    //   props: {
-    //     placeholder: '请输入1-8之间数字',
-    //   },
-    //   validator: {
-    //     required: false,
-    //   }
-    // },
+    {
+      key: 'temperature',
+      label: t('param_temperature_label'),
+      component: FormItemComponent.Textarea,
+      props: {
+        placeholder: '请输入0.0-2.0之间数字',
+      },
+      validator: {
+        required: false,
+      }
+    },
+    {
+      key: 'topP',
+      label: t('param_top_p_label'),
+      component: FormItemComponent.Textarea,
+      props: {
+        placeholder: '请输入0.0-1.0之间数字',
+      },
+      validator: {
+        required: false,
+      }
+    },
+    {
+      key: 'topK',
+      label: t('param_top_K_label'),
+      component: FormItemComponent.Textarea,
+      props: {
+        placeholder: '请输入10-100之间数字',
+      },
+      validator: {
+        required: false,
+      }
+    },
+    {
+      key: 'candidateCount',
+      label: t('param_candidateCount_label'),
+      component: FormItemComponent.Textarea,
+      props: {
+        placeholder: '请输入1-8之间数字',
+      },
+      validator: {
+        required: false,
+      }
+    },
   ],
   // 定义捷径的返回结果类型
   resultType: {
@@ -110,60 +110,46 @@ fieldDecoratorKit.setDecorator({
   },
   // formItemParams 为运行时传入的字段参数，对应字段配置里的 formItems （如引用的依赖字段）
   execute: async (context, formItemParams) => {
-    const { imageUrl1, prompt } = formItemParams;
+    const { imageUrl1, prompt, temperature, topP, topK, candidateCount } = formItemParams;
     try {
-      // 1. 调用Gemini API
-      const url = 'https://api.ezlinkai.com/v1beta/models/gemini-3-pro-preview:generateContent';
+      // 1. 收集所有图片的临时URL
+      const imageFields = [imageUrl1];
+      const tmpUrls: string[] = [];
 
-      // Build request payload
-      const requestBody: any = {
-        model: "gemini-3-pro-preview",
-        "contents": [{
-          "role": "user",
-          "parts": []
-        }],
-        "generationConfig": {
-          "responseModalities": ["TEXT"]
+      for (const imageField of imageFields) {
+        // 每个imageField是一个图片数组，可能包含多张图片
+        if (Array.isArray(imageField)) {
+          for (const image of imageField) {
+            if (image?.tmp_url) {
+              tmpUrls.push(image.tmp_url);
+            }
+          }
         }
+      }
+      
+      // 1. 调用Gemini API
+      const url = 'https://saas.jcbbi.com:8180/api/sysChatChannel/messagebuilderchat';
+
+      // 飞书公共插件
+      const headers = {
+        'Content-Type': 'application/json',
       };
 
 
-       // Add images first (inlineData with camelCase)
-      if (Array.isArray(imageUrl1) && imageUrl1.length > 0 && imageUrl1[0]?.tmp_url) {
-        const image = imageUrl1[0];
-        try {
-          // Fetch the image from the temporary URL
-          const imageResponse = await context.fetch(image.tmp_url, {
-            method: 'GET',
-          });
-          const arrayBuffer = await imageResponse.arrayBuffer();
-
-          // Convert ArrayBuffer to Buffer
-          const buffer = Buffer.from(arrayBuffer);
-
-          // Convert Buffer to base64 string without data URI prefix
-          const base64 = buffer.toString('base64');
-          const contentType = image.type + '/' + image.name.split('.').pop() || 'image/png';
-
-          // Add image to request using inlineData (camelCase)
-          requestBody.contents[0].parts.push({
-            "inlineData": {
-              "data": base64,
-              "mimeType": contentType
-            }
-          });
-        } catch (error) {
-          console.log({ '===图片处理错误': String(error) });
-        }
-      }
-
-      // Add prompt text last
-      requestBody.contents[0].parts.push({
-        "text": prompt
-      });
+      // Build request payload
+      const requestBody = {
+        "model": "gemini-3-pro-preview",
+        "content": prompt,
+        "imageUrls": tmpUrls,
+        "temperature": Number(temperature),
+        "topP": Number(topP),
+        "topK": Number(topK),
+        "candidateCount": Number(candidateCount),
+      };
 
       const init = {
         method: 'POST',
+        headers: headers,
         body: JSON.stringify(requestBody)
       };
 
@@ -178,30 +164,10 @@ fieldDecoratorKit.setDecorator({
         // 解析响应，获取文字结果
         let resultText = '';
 
-        // 检查candidates是否存在
-        if (resJson.candidates && Array.isArray(resJson.candidates) && resJson.candidates.length > 0) {
-          const candidate = resJson.candidates[0];
-          console.log({ '===candidate': JSON.stringify(candidate) });
-
-          // 检查content
-          if (candidate.content) {
-            const content = candidate.content;
-            console.log({ '===content': JSON.stringify(content) });
-
-            // 检查parts
-            if (content.parts && Array.isArray(content.parts)) {
-              // console.log({ '===parts数量': content.parts.length });
-
-              // 查找text类型的content
-              for (const part of content.parts) {
-                if (part.text) {
-                  resultText = part.text;
-                  // console.log({ '===找到text': resultText.substring(0, 100) });
-                  break;
-                }
-              }
-            }
-          }
+        if (resJson.code === 200 && resJson.result && resJson.result.message) {
+          resultText = resJson.result.message;
+        }else {
+          resultText = '请联系管理员';
         }
 
         console.log({ '===最终提取的text': resultText.substring(0, 100) });

@@ -205,13 +205,12 @@ _dingtalkDocsCoolApp.fieldDecoratorKit.setDecorator({
             init = {
               method: 'POST',
               headers: {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer 3lbdC51aWu9RUL6gFa3fFaCcA50b47EaB8B893DeCfEc6716'
+                'Content-Type': 'application/json'
               },
               body: JSON.stringify(requestBody)
             };
             _context.n = 3;
-            return context.fetch(url, init);
+            return context.fetch(url, init, 'auth_id');
           case 3:
             res = _context.v;
             _context.n = 4;

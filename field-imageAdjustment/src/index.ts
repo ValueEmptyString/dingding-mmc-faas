@@ -6,22 +6,6 @@ fieldDecoratorKit.setDomainList(['api.exchangerate-api.com', 'alidocs2-zjk-cdn.d
 
 fieldDecoratorKit.setDecorator({
   name: '图像调整',
-  authorizations: {
-    id: 'auth_id',// 授权的id，用于context.fetch第三个参数指定使用
-    platform: '毛毛虫',// 授权平台，目前可以填写当前平台名称
-    type: AuthorizationType.HeaderBearerToken, // 授权类型
-    required: false,// 设置为选填，用户如果填了授权信息，请求中则会携带授权信息，否则不带授权信息
-    instructionsUrl: "https://www.mmcjt.cn/",// 帮助链接，告诉使用者如何填写这个apikey
-    label: '授权', // 授权平台，告知用户填写哪个平台的信息
-    tooltips: '请联系公司AI管理员获取授权（1.0.0）', // 提示，引导用户添加授权
-    /**
-    * 也支持配置链接
-    **/
-    icon: { // 当前平台的图标
-      light: 'https://saas.jcbbi.com/upload/2026/01/29/767965034025029.jpg',
-      dark: 'https://saas.jcbbi.com/upload/2026/01/29/767965034025029.jpg'
-    }
-  },
   // 定义捷径的i18n语言资源
   i18nMap: {
     'zh-CN': {
@@ -160,7 +144,7 @@ fieldDecoratorKit.setDecorator({
           console.log({ '===图片处理错误': String(error) });
           return {
             code: FieldExecuteCode.Error,
-            data: '图像处理错误，请检查图像文件是否有效',
+            data: '请检查图片是否有效',
           };
         }
       }
@@ -228,6 +212,7 @@ fieldDecoratorKit.setDecorator({
       console.log('====error', String(e));
       return {
         code: FieldExecuteCode.Error,
+        data: String(e),
       }
     }
   },
