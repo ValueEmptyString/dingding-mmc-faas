@@ -145,11 +145,11 @@ fieldDecoratorKit.setDecorator({
     type: FieldType.Attachment,
   },
   // formItemParams 为运行时传入的字段参数，对应字段配置里的 formItems （如引用的依赖字段）
-  execute: async (context, formData: { imageUrl1: string; prompt: string; model: string; temperature?: string; topP?: string; topK?: string; candidateCount?: string }) => {
-    const { imageUrl1, prompt, model, temperature, topP, topK, candidateCount } = formData;
+  execute: async (context, formData: { imageUrl1: string; imageUrl2?: string; imageUrl3?: string; prompt: string; model: string; temperature?: string; topP?: string; topK?: string; candidateCount?: string }) => {
+    const { imageUrl1, imageUrl2, imageUrl3, prompt, model, temperature, topP, topK, candidateCount } = formData;
     try {
       // 1. 收集所有图片的临时URL
-      const imageFields = [imageUrl1];
+      const imageFields = [imageUrl1, imageUrl2, imageUrl3];
       const tmpUrls: string[] = [];
 
       for (const imageField of imageFields) {
@@ -204,8 +204,6 @@ fieldDecoratorKit.setDecorator({
         throw new Error('API call failed with code: ' + resJson.code);
       }
 
-
-      
       // console.log('===========<uploadedImages', uploadedImages);
 
       return {
